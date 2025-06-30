@@ -1,0 +1,9 @@
+[
+  {
+    "objectID": "analysis.html",
+    "href": "analysis.html",
+    "title": "Biden Polling",
+    "section": "",
+    "text": "Logistic Regression Results for Biden Support\n\n\nTerm\nEstimate\nLower CI\nUpper CI\n\n\n\n\n(Intercept)\n−0.322\n−0.423\n−0.222\n\n\n\n\n\n\n\n\n\n# A tibble: 1,559 × 2\n   .pred_No .pred_Yes\n      &lt;dbl&gt;     &lt;dbl&gt;\n 1    0.580     0.420\n 2    0.580     0.420\n 3    0.580     0.420\n 4    0.580     0.420\n 5    0.580     0.420\n 6    0.580     0.420\n 7    0.580     0.420\n 8    0.580     0.420\n 9    0.580     0.420\n10    0.580     0.420\n# ℹ 1,549 more rows\n\n\n\n\n\n\n\n\n\n\n Group Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %\n   No      0.58     0.0125 46.4   &lt;0.001   Inf 0.555  0.604\n   Yes     0.42     0.0125 33.6   &lt;0.001 820.2 0.396  0.445\n\nType: prob\n\n\n\n\n\n\n\n\n\n\n\nSummary Public opinion polls provide crucial but imperfect snapshots of voter sentiment during campaigns. Using March 2024 YouGov survey data from 1,559 U.S. adults, we estimate the proportion of votes Joe Biden will receive in the November election.\nWe model support for Joe Biden—measured as a binary outcome of either intending to vote for him or not—as a logistic function of an intercept-only model, reflecting the baseline support level. Our estimates may be biased if late-deciding voters break differently for Biden than survey respondents who expressed firm preferences in March."
+  }
+]

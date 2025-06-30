@@ -1,0 +1,90 @@
+---
+title: "Biden Polling"
+author: Faran Abbas
+format: html
+execute: 
+  echo: false
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(tidymodels)
+library(broom)
+library(easystats)
+library(ggplot2)
+library(scales)
+library(marginaleffects)
+library(gt)
+```
+
+```{r}
+# Simulate poll data: 1,559 observations
+poll_data <- tibble(
+  biden = factor(c(rep("Yes", 655), rep("No", 904)))
+) |> 
+  slice_sample(prop = 1)
+
+# Fit intercept-only logistic regression model
+fit_biden <- logistic_reg() |> 
+  set_engine("glm") |> 
+  fit(biden ~ 1, data = poll_data)
+```
+
+```{r}
+# Create a tidy summary table with estimate and 95% CI
+tidy(fit_biden, conf.int = TRUE) |>
+  select(term, estimate, conf.low, conf.high) |>
+  gt() |>
+  fmt_number(columns = c(estimate, conf.low, conf.high), decimals = 3) |>
+  cols_label(
+    term = "Term",
+    estimate = "Estimate",
+    conf.low = "Lower CI",
+    conf.high = "Upper CI"
+  ) |>
+  tab_header(
+    title = "Logistic Regression Results for Biden Support"
+  )
+```
+
+```{r}
+# Corrected prediction line: provide new_data explicitly
+predict(fit_biden, new_data = poll_data, type = "prob")
+
+# Plot individual-level predictions
+plot_predictions(fit_biden, type = "prob", condition = "group")
+
+# Average predicted probabilities
+avg_predictions(fit_biden, type = "prob")
+```
+
+```{r}
+# Store avg_predictions in a variable to avoid recomputation
+biden_avg <- avg_predictions(fit_biden, type = "prob") |> 
+  filter(group == "Yes")
+
+# Plot Biden support estimate with 95% CI
+ggplot(biden_avg, aes(x = group, y = estimate)) +
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high), size = 1.2) +
+  labs(
+    title = "Support for President Biden in March 2024",
+    subtitle = paste0(
+      percent(round(biden_avg$estimate, 2)),
+      " is not a good sign for an incumbent seeking reelection"
+    ),
+    x = NULL, y = NULL
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0.38, 0.46)) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.text.x = element_blank()
+  )
+```
+
+
+**Summary**
+Public opinion polls provide crucial but imperfect snapshots of voter sentiment during campaigns. Using March 2024 YouGov survey data from 1,559 U.S. adults, we estimate the proportion of votes Joe Biden will receive in the November election.
+
+We model support for Joe Biden—measured as a binary outcome of either intending to vote for him or not—as a logistic function of an intercept-only model, reflecting the baseline support level. Our estimates may be biased if late-deciding voters break differently for Biden than survey respondents who expressed firm preferences in March.

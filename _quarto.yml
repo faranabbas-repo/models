@@ -1,0 +1,10 @@
+project:
+  type: website
+
+website:
+  title: "Biden Polling Analysis"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
